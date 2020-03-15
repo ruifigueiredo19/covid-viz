@@ -8,7 +8,6 @@ import pickle
 # CONSTANTS
 class color:
    BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
    END = '\033[0m'
 
     
@@ -21,7 +20,7 @@ class Data:
     }
     
     @classmethod
-    def from_pickle(cls, datatype, autosave=False):
+    def from_pickle(cls, datatype):
         if datatype not in cls.URLS:
             raise ValueError(f"Invalid type received for datatype: '{datatype}'.")
             
@@ -29,7 +28,7 @@ class Data:
             return pickle.load(picklefile)
     
     
-    def __init__(self, datatype='confirmed', from_csv=False):
+    def __init__(self, datatype='confirmed', from_csv=False, autosave=False):
         if datatype not in self.URLS:
             raise ValueError(f"Invalid type received for datatype: '{datatype}'.")
                   
@@ -87,9 +86,9 @@ class Data:
         n_rows = round(N/2 + 0.6)  # + 0.6 for proper integer rounding on cases like 2.5
         n_cols = 2
         
-        fig, axs = plt.subplots(nrows=n_rows, ncols=n_cols, figsize = (20, 3 * (N+1)), constrained_layout=True)
+        fig, axs = plt.subplots(nrows=n_rows, ncols=n_cols, figsize = (15, 3 * (N+1)), constrained_layout=True)
         plt.suptitle(f'Cases {self.datatype} (World total: {self.total_cases})\n', fontsize=25)
-        plt.figtext(.5, .952, f'Generated at: {self.datetime_str} UTC', fontsize=16, ha='center')
+        plt.figtext(.5, .952, f'Generated at {self.datetime_str} UTC', fontsize=16, ha='center')
         
         total_ax = axs[-1, N % 2]
         total_ax.set_title('All Countries')
@@ -101,8 +100,8 @@ class Data:
         for i, country in enumerate(countries):
             ax = axs[i // 2, i % 2]
             ax.set_title(country)
-            ax.plot_date(self.dt_columns, df.loc[country], ls=':', marker='.', c=f'C{i}', label=country)
-            total_ax.plot_date(self.dt_columns, df.loc[country], ls=':', marker='.', c=f'C{i}', label=country)
+            ax.plot_date(self.dt_columns, self.df.loc[country], ls=':', marker='.', c=f'C{i}', label=country)
+            total_ax.plot_date(self.dt_columns, self.df.loc[country], ls=':', marker='.', c=f'C{i}', label=country)
 
         # Formatting all plots (including total)
         for i in range(N + 1):
@@ -131,4 +130,3 @@ if __name__ == '__main__':
     confirmedData = Data('confirmed')
     print(confirmedData)
     confirmedData.plot(countries=('Portugal', 'Italy', 'Spain', 'US'), savefig=True)
-    
