@@ -129,4 +129,4 @@ class Data:
 if __name__ == '__main__':
     confirmedData = Data('confirmed')
     print(confirmedData)
-    confirmedData.plot(countries=('Portugal', 'Italy', 'Spain', 'US'), savefig=True)
+    confirmedData.plot(countries=('Portugal', 'Italy', 'Spain', 'France', 'US', 'Turkey'), savefig=True)
